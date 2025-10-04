@@ -9,27 +9,56 @@ const CartItem = ({ onContinueShopping }) => {
 
   // Calculate total amount for all products in the cart
   const calculateTotalAmount = () => {
- 
+    let total = 0; // Initialize a variable to hold the cumulative sum
+    
+    // Iterate over the cart array
+    cart.forEach((item) => {
+      // Extract quantity and cost for each item
+      const quantity = item.quantity;
+      // Convert the cost string (e.g., "$10") to a number
+      const cost = parseFloat(item.cost.substring(1));
+      // Multiply cost by quantity and add to total
+      total += cost * quantity;
+    });
+    
+    return total.toFixed(2); // Return the final total sum with 2 decimal places
   };
 
   const handleContinueShopping = (e) => {
-   
+    // Call the function passed from the parent component to continue shopping
+    onContinueShopping(e);
   };
 
-
+  const handleCheckoutShopping = (e) => {
+    alert('Functionality to be added for future reference');
+  };
 
   const handleIncrement = (item) => {
+    // Dispatch updateQuantity action to increase quantity by 1
+    dispatch(updateQuantity({ name: item.name, quantity: item.quantity + 1 }));
   };
 
   const handleDecrement = (item) => {
-   
+    // If quantity is greater than 1, decrease by 1
+    if (item.quantity > 1) {
+      dispatch(updateQuantity({ name: item.name, quantity: item.quantity - 1 }));
+    } else {
+      // If quantity would drop to 0, remove the item from cart
+      dispatch(removeItem(item.name));
+    }
   };
 
   const handleRemove = (item) => {
+    // Dispatch removeItem action to delete the item from cart
+    dispatch(removeItem(item.name));
   };
 
   // Calculate total cost based on quantity for an item
   const calculateTotalCost = (item) => {
+    // Extract the numeric value from the cost string and multiply by quantity
+    const cost = parseFloat(item.cost.substring(1));
+    const total = cost * item.quantity;
+    return total.toFixed(2); // Return with 2 decimal places
   };
 
   return (
@@ -57,12 +86,10 @@ const CartItem = ({ onContinueShopping }) => {
       <div className="continue_shopping_btn">
         <button className="get-started-button" onClick={(e) => handleContinueShopping(e)}>Continue Shopping</button>
         <br />
-        <button className="get-started-button1">Checkout</button>
+        <button className="get-started-button1" onClick={(e) => handleCheckoutShopping(e)}>Checkout</button>
       </div>
     </div>
   );
 };
 
 export default CartItem;
-
-
